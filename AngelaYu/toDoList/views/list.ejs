@@ -7,14 +7,15 @@
     <title>To Do List</title>
   </head>
   <body>
+    <h1><%=kindOfDay%></h1>
+    <ul>
+      <% for (let item of items) { %>
+      <li><%=item%></li>
+      <% } %>
+    </ul>
     <form action="/" method="post">
       <input type="text" name="newToDo" id="newToDoId" />
       <button type="submit">Add new to do</button>
     </form>
-    <h1><%=kindOfDay%></h1>
-    <ul>
-      <li>Buy Food</li>
-      <li>Cook Food</li>
-    </ul>
   </body>
 </html>
