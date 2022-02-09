@@ -3,4 +3,16 @@
 <h1>Home</h1>
 <p><%= homeStartingContent %></p>
 
-<%- include("partials/footer"); -%>
+<% for (let post of posts) { %>
+<h1><%= post.title %></h1>
+<p>
+    <%= post.content.substring(0,100) + "..."%>
+    
+    <a type="button" href="/posts/<%= post.title %>">Read more</a>
+
+</p>
+
+
+<% } %> 
+    
+<%- include("partials/footer"); -%> </a>
