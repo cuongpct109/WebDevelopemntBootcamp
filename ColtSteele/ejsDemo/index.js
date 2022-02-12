@@ -10,7 +10,7 @@ app.set("views", path.join(__dirname + "/views"));
 
 app.get("/", (req, res) => {
   const randNum = Math.floor(Math.random() * 10) + 1;
-  res.render("home", { randNum });
+  res.render("home", { randNum }); 
 });
 
 app.get("/rand", (req, res) => {
