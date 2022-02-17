@@ -4,12 +4,20 @@
 </div>
 
 <div class="box">
-  <% newListItems.forEach((item) => { %>
-  <div class="item">
-    <input type="checkbox" />
-    <p><%= item.name %></p>
-  </div>
-  <%});%>
+  <form action="/delete" method="post">
+    <% newListItems.forEach((item) => { %>
+    <div class="item">
+      <input
+        onChange="this.form.submit()"
+        name="checkBox"
+        value="<%=item.name%>"
+        type="checkbox"
+      />
+      <p><%= item.name %></p>
+    </div>
+    <%});%>
+    <input type="hidden" name="listName" value="<%=listTitle%>" id="" />
+  </form>
 
   <form class="item" action="/" method="post">
     <input
