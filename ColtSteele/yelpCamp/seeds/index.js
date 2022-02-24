@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const Campground = require("../models/campground");
+const Review = require("../models/review");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 
@@ -16,7 +17,8 @@ db.once("open", () => {
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
-  await Campground.deleteMany({});
+  await Campground.deleteMany();
+  await Review.deleteMany();
   for (let i = 0; i < 50; i++) {
     const price = Math.floor(Math.random() * 20) + 10;
     const camp = new Campground({
