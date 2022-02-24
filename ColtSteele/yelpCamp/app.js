@@ -6,8 +6,11 @@ const ejsMate = require("ejs-mate");
 // const Joi = require("joi");
 
 const Campground = require("./models/campground");
+const Review = require("./models/review");
+
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
+
 const { campgroundSchema } = require("./schemas");
 
 mongoose.connect("mongodb://localhost:27017/yelpcamp");
@@ -80,9 +83,24 @@ app.get(
 app.get(
   "/campgrounds/:id/edit",
   catchAsync(async (req, res, next) => {
-    const id = req.params.id;
+    const { id } = req.params;
     const campground = await Campground.findById(id);
     res.render("campgrounds/edit", { campground });
+  })
+);
+
+app.post(
+  "/campgrounds/:id/reviews",
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+
+    const review = new Review(req.body.review);
+
+    const campground = await Campground.findById(id);
+    campground.reviews.push(review);
+    await campground.save();
+    await review.save();
+    res.redirect(`/campgrounds/${id}`);
   })
 );
 
