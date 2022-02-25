@@ -3,6 +3,7 @@ const router = express.Router({ mergeParams: true });
 
 const Campground = require("../models/campground");
 const Review = require("../models/review");
+const flash = require("connect-flash");
 
 const { reviewSchema } = require("../schemas");
 
@@ -33,6 +34,7 @@ router.post(
     await campground.save();
     await review.save();
 
+    req.flash("success", "Created new review!");
     res.redirect(`/campgrounds/${campground._id}`);
   })
 );
@@ -45,6 +47,7 @@ router.delete(
     await Review.findByIdAndDelete(reviewId);
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
 
+    req.flash("success", "Successfully deleted review!");
     res.redirect(`/campgrounds/${id}`);
   })
 );
