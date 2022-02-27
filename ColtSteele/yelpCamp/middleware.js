@@ -1,5 +1,6 @@
 const ExpressError = require("./utils/ExpressError");
 const { campgroundSchema, reviewSchema } = require("./schemas");
+const passport = require("passport");
 const Campground = require("./models/campground");
 const Review = require("./models/review");
 
@@ -64,3 +65,8 @@ const isReviewAuthor = async (req, res, next) => {
 };
 
 module.exports.isReviewAuthor = isReviewAuthor;
+
+module.exports.validateUserBeforeLogIn = passport.authenticate("local", {
+  failureFlash: true,
+  failureRedirect: "/login",
+});
