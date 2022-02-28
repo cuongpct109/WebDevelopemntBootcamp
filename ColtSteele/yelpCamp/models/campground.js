@@ -1,14 +1,20 @@
-const { ref, string } = require("joi");
 const mongoose = require("mongoose");
 const Review = require("./review");
 
 const { Schema } = mongoose;
 
+function arrayLimit(val) {
+  return val.length <= 5;
+}
+
 const CampgroundSchema = new Schema({
   title: String,
   price: Number,
   description: String,
-  images: [{ url: String, filename: String }],
+  images: {
+    type: [{ url: String, filename: String }],
+    validate: [arrayLimit, "Can not upload more than 5 images"],
+  },
   location: String,
   reviews: [
     {
