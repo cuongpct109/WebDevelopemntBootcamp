@@ -5,11 +5,11 @@ const Review = require("./review");
 const { Schema } = mongoose;
 
 const CampgroundSchema = new Schema({
-  title: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: { type: String, required: true },
-  image: { type: String, required: true },
-  location: { type: String, required: true },
+  title: String,
+  price: Number,
+  description: String,
+  images: [{ url: String, filename: String }],
+  location: String,
   reviews: [
     {
       type: Schema.Types.ObjectId,

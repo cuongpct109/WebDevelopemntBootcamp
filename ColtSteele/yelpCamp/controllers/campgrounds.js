@@ -1,4 +1,5 @@
 const Campground = require("../models/campground");
+const { validateCampground } = require("../middleware");
 
 module.exports.index = async (req, res, next) => {
   const campgrounds = await Campground.find({});
@@ -13,7 +14,10 @@ module.exports.renderNewForm = async (req, res, next) => {
 
 module.exports.createCampground = async (req, res, next) => {
   const campground = new Campground(req.body.campground);
-
+  campground.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
   campground.author = req.user._id;
   await campground.save();
   req.flash("success", "Successfully made a campground!!!");
