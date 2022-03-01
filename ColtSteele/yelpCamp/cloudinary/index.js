@@ -20,4 +20,3 @@ module.exports = {
   cloudinary,
   storage,
 };
-// function(error, result) {console.log(result, error); });

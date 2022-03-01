@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const Campground = require("../models/campground");
 const Review = require("../models/review");
+const User = require("../models/user");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 
@@ -21,8 +22,8 @@ const seedDB = async () => {
   await Review.deleteMany();
   for (let i = 0; i < 50; i++) {
     const price = Math.floor(Math.random() * 20) + 10;
-    const camp = new Campground({
-      author: "621a25afbc2adfe617197164",
+    const camp = await new Campground({
+      author: (await User.findOne({ name: "cuong" }))._id,
       location: `${sample(cities).city}, ${sample(cities).state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       description:
@@ -30,12 +31,12 @@ const seedDB = async () => {
       price,
       images: [
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646046773/YelpCamp/tcclbcrmhbdepijsbeni.png",
-          filename: "YelpCamp/lyhevetw9aiwtmnqv8p8",
+          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646106957/YelpCamp/v4hxdivsyc89sjq6leun.png",
+          filename: "YelpCamp/v4hxdivsyc89sjq6leun",
         },
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646046842/YelpCamp/md6rxfx5ubumrlchjgnk.png",
-          filename: "YelpCamp/q9v5piibrzfysjs45wh5",
+          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646106960/YelpCamp/mleh6fyhfi7dv7vauzks.png",
+          filename: "YelpCamp/mleh6fyhfi7dv7vauzks",
         },
       ],
     });
