@@ -16,28 +16,44 @@ module.exports.renderNewForm = async (req, res, next) => {
 };
 
 module.exports.createCampground = async (req, res, next) => {
-  const geoData = await geocoder
+  await geocoder
     .forwardGeocode({
       query: req.body.campground.location,
       limit: 1,
     })
-    .send();
-  console.log(geoData.body.features[0].geometry.coordinates);
-  res.send("OK!");
-  // const campground = new Campground(req.body.campground);
-  // campground.images = req.files.map((f) => ({
-  //   url: f.path,
-  //   filename: f.filename,
-  // }));
-  // campground.author = req.user._id;
-  // const error = campground.validateSync();
-  // if (error) {
-  //   req.flash("error", `${error.message}`);
-  //   return res.redirect("/campgrounds/new");
-  // }
-  // await campground.save();
-  // if (req) req.flash("success", "Successfully made a campground!!!");
-  // res.redirect(`/campgrounds/${campground._id}`);
+    .send()
+    .then((response) => {
+      if (
+        !response ||
+        !response.body ||
+        !response.body.features ||
+        !response.body.features.length
+      ) {
+        req.flash("error", `Invalid response: ${response}`);
+
+        return res.redirect("/campgrounds/new");
+      } else {
+        req.body.campground.geometry = response.body.features[0].geometry;
+      }
+    });
+
+  req.body.campground.author = req.user._id;
+
+  req.body.campground.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
+
+  const campground = new Campground(req.body.campground);
+
+  const error = campground.validateSync();
+  if (error) {
+    req.flash("error", `${error.message}`);
+    return res.redirect("/campgrounds/new");
+  }
+  await campground.save();
+  if (req) req.flash("success", "Successfully made a campground!!!");
+  res.redirect(`/campgrounds/${campground._id}`);
 };
 
 module.exports.showCampground = async (req, res, next) => {

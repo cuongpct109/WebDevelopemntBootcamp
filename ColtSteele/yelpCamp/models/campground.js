@@ -21,6 +21,17 @@ const CampgroundSchema = new Schema({
     type: [ImageSchema],
     validate: [arrayLimit, "Can not upload more than 5 images"],
   },
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
   location: String,
   reviews: [
     {
