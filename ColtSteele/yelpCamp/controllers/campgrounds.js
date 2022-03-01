@@ -1,5 +1,8 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../cloudinary");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapboxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapboxToken });
 
 module.exports.index = async (req, res, next) => {
   const campgrounds = await Campground.find({});
@@ -13,20 +16,28 @@ module.exports.renderNewForm = async (req, res, next) => {
 };
 
 module.exports.createCampground = async (req, res, next) => {
-  const campground = new Campground(req.body.campground);
-  campground.images = req.files.map((f) => ({
-    url: f.path,
-    filename: f.filename,
-  }));
-  campground.author = req.user._id;
-  const error = campground.validateSync();
-  if (error) {
-    req.flash("error", `${error.message}`);
-    return res.redirect("/campgrounds/new");
-  }
-  await campground.save();
-  if (req) req.flash("success", "Successfully made a campground!!!");
-  res.redirect(`/campgrounds/${campground._id}`);
+  const geoData = await geocoder
+    .forwardGeocode({
+      query: req.body.campground.location,
+      limit: 1,
+    })
+    .send();
+  console.log(geoData.body.features[0].geometry.coordinates);
+  res.send("OK!");
+  // const campground = new Campground(req.body.campground);
+  // campground.images = req.files.map((f) => ({
+  //   url: f.path,
+  //   filename: f.filename,
+  // }));
+  // campground.author = req.user._id;
+  // const error = campground.validateSync();
+  // if (error) {
+  //   req.flash("error", `${error.message}`);
+  //   return res.redirect("/campgrounds/new");
+  // }
+  // await campground.save();
+  // if (req) req.flash("success", "Successfully made a campground!!!");
+  // res.redirect(`/campgrounds/${campground._id}`);
 };
 
 module.exports.showCampground = async (req, res, next) => {
@@ -40,7 +51,6 @@ module.exports.showCampground = async (req, res, next) => {
     .populate({
       path: "author",
     });
-  console.log(campground);
 
   if (!campground) {
     req.flash("error", "Cannot find that campground!");
@@ -65,7 +75,6 @@ module.exports.renderEditForm = async (req, res, next) => {
 };
 
 module.exports.updateCampground = async (req, res, next) => {
-  console.log(req.body);
   const { id } = req.params;
 
   const campground = await Campground.findByIdAndUpdate(id, {
@@ -94,7 +103,6 @@ module.exports.updateCampground = async (req, res, next) => {
     await campground.updateOne({
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
-    console.log(campground);
   }
   req.flash("success", "Successfully updated campground!");
   res.redirect(`/campgrounds/${campground._id}`);
