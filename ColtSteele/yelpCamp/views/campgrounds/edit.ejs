@@ -2,7 +2,7 @@
 
 <div class="row">
   <h1 class="text-center">Edit Campground</h1>
-  <div class="col-6 offset-3">
+  <div class="col-md-6 offset-md-3">
     <form
       action="/campgrounds/<%= campground._id %>?_method=PUT"
       method="POST"
@@ -75,9 +75,9 @@
         </textarea>
         <div class="valid-feedback">Looks good!</div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3 justify-content-md-start">
         <% for (let img of campground.images) { %>
-        <div class="col-6">
+        <div class="d-grid col-md-6 justify-content-center">
           <div class="form-check">
             <input
               class="form-check-input"
@@ -100,8 +100,8 @@
 
         <% } %>
       </div>
-      <div class="mb-3">
-        <button class="btn btn-info" type="submit">Update</button>
+      <div class="d-grid col-md-6 offset-md-3 mb-3">
+        <button class="btn btn-info">Update</button>
       </div>
     </form>
     <div class="mb-3">

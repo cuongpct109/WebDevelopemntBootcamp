@@ -7,6 +7,16 @@ const map = new mapboxgl.Map({
   zoom: 6,
 });
 
+map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }));
+map.addControl(
+  new MapboxDirections({
+    accessToken: mapboxgl.accessToken,
+    unit: "metric",
+    profile: "mapbox/driving",
+  }),
+  "top-left"
+);
+
 // Create a marker and add it to the map.
 new mapboxgl.Marker({
   color: "#3FB1CE",
