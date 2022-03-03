@@ -13,6 +13,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const MongoStore = require("connect-mongo");
 
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
@@ -20,10 +22,11 @@ const ExpressError = require("./utils/ExpressError");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
 const User = require("./models/user");
-
-mongoose.connect("mongodb://localhost:27017/yelpcamp");
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
+mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
@@ -43,8 +46,13 @@ app.use(mongoSanitize());
 
 app.use(
   session({
+    store: MongoStore.create({
+      mongoUrl: dbUrl,
+      secret,
+      touchAfter: 24 * 3600, // time period in seconds
+    }),
     name: "session",
-    secret: "thisshouldbeabettersecret!",
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -57,6 +65,12 @@ app.use(
 );
 
 app.use(flash());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
