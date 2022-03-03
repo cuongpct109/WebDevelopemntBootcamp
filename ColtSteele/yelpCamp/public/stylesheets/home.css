@@ -26,6 +26,9 @@ body {
 
   transform: translateY(-2px);
 }
+.nav-link:visited {
+  color: white;
+}
 
 .nav-link.active {
   color: white;

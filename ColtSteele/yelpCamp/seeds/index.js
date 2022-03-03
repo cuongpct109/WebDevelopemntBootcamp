@@ -1,6 +1,4 @@
-const express = require("express");
 const mongoose = require("mongoose");
-const path = require("path");
 const Campground = require("../models/campground");
 const Review = require("../models/review");
 const User = require("../models/user");
