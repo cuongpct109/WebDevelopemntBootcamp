@@ -8,7 +8,7 @@ const User = require("../models/user");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 const dbUrl = process.env.DB_URL;
-console.log(dbUrl);
+
 mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
