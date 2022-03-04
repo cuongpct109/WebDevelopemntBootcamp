@@ -26,6 +26,10 @@ const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
 const User = require("./models/user");
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1b653c38a71b66f80d96679e077b833dd988fea6
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -44,6 +48,8 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
+const secure = dbUrl === "mongodb://localhost:27017/yelpcamp" ? false : true;
+
 app.use(
   session({
     store: MongoStore.create({
@@ -55,9 +61,10 @@ app.use(
     secret,
     resave: false,
     saveUninitialized: true,
+    proxy: true,
     cookie: {
       httpOnly: true,
-      // secure: true,
+      secure: secure,
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
@@ -110,6 +117,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(3000, () => {
-  console.log("Serving on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Serving on port ${port}`);
 });

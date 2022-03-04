@@ -1,11 +1,15 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const mongoose = require("mongoose");
 const Campground = require("../models/campground");
 const Review = require("../models/review");
 const User = require("../models/user");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
+const dbUrl = process.env.DB_URL;
 
-mongoose.connect("mongodb://localhost:27017/yelpcamp");
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -18,7 +22,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 const seedDB = async () => {
   await Campground.deleteMany();
   await Review.deleteMany();
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 50; i++) {
     const city = sample(cities);
     const price = Math.floor(Math.random() * 20) + 10;
     const campground = await new Campground({
@@ -30,24 +34,24 @@ const seedDB = async () => {
       price,
       images: [
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297787/YelpCamp/s98nymwcwafomq3ahk6m.jpg",
-          filename: "YelpCamp/s98nymwcwafomq3ahk6m",
+          url: "/images/1.jpg",
+          filename: "1",
         },
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297790/YelpCamp/zqjjqvwkqxk4dwp4vy0u.jpg",
-          filename: "YelpCamp/zqjjqvwkqxk4dwp4vy0u",
+          url: "/images/2.jpg",
+          filename: "2",
         },
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297794/YelpCamp/g1n6u6cbsuhdpvmsjz6j.jpg",
-          filename: "YelpCamp/g1n6u6cbsuhdpvmsjz6j",
+          url: "/images/3.jpg",
+          filename: "3",
         },
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297801/YelpCamp/xkdwu1eqnih516jkocst.jpg",
-          filename: "YelpCamp/xkdwu1eqnih516jkocst",
+          url: "/images/4.jpg",
+          filename: "4",
         },
         {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297909/YelpCamp/hy19qjjd6wdic0mom1zl.jpg",
-          filename: "YelpCamp/hy19qjjd6wdic0mom1zl",
+          url: "/images/5.jpg",
+          filename: "5",
         },
       ],
       geometry: { type: "Point", coordinates: [city.longitude, city.latitude] },
