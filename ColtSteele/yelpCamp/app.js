@@ -45,7 +45,7 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
-// const secure = dbUrl === "mongodb://localhost:27017/yelpcamp" ? false : true;
+const secure = dbUrl === "mongodb://localhost:27017/yelpcamp" ? false : true;
 
 app.use(
   session({
@@ -61,7 +61,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: secure,
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
