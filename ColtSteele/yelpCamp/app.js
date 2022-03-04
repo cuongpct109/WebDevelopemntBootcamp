@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
 const _ = require("lodash");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -13,6 +9,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const MongoStore = require("connect-mongo");
 
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
@@ -20,10 +18,12 @@ const ExpressError = require("./utils/ExpressError");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
 const User = require("./models/user");
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
 
-mongoose.connect("mongodb://localhost:27017/yelpcamp");
+mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
@@ -41,12 +41,20 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
+// const secure = dbUrl === "mongodb://localhost:27017/yelpcamp" ? false : true;
+
 app.use(
   session({
+    store: MongoStore.create({
+      mongoUrl: dbUrl,
+      secret,
+      touchAfter: 24 * 3600, // time period in seconds
+    }),
     name: "session",
-    secret: "thisshouldbeabettersecret!",
+    secret,
     resave: false,
     saveUninitialized: true,
+    proxy: true,
     cookie: {
       httpOnly: true,
       secure: true,
@@ -57,6 +65,12 @@ app.use(
 );
 
 app.use(flash());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -96,6 +110,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(3000, () => {
-  console.log("Serving on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Serving on port ${port}`);
 });
