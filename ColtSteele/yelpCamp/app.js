@@ -26,10 +26,6 @@ const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
 const User = require("./models/user");
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
-<<<<<<< HEAD
-=======
-
->>>>>>> 1b653c38a71b66f80d96679e077b833dd988fea6
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));

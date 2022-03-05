@@ -160,7 +160,7 @@
     <% for (let review of campground.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title"><%= review.author.username[0].toUpperCase().concat(review.author.username.substring(1)) %></h5>
+        <h5 class="card-title"><%= review.author.username %></h5>
  
         <p class="starability-result scale-down" data-rating="<%= review.rating %>">
           Rated: <%= review.rating %> stars

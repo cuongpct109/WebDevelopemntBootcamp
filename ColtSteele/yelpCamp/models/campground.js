@@ -4,7 +4,7 @@ const Review = require("./review");
 const { Schema } = mongoose;
 
 function arrayLimit(val) {
-  return val.length <= 5;
+  return val.length <= 10;
 }
 
 const ImageSchema = new Schema({ url: String, filename: String });
