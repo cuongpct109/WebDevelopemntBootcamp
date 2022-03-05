@@ -28,7 +28,9 @@ Prerequisites:
 
 + Browse to the url given in the output.
 Example: if the console's output is : Serving on port 3000 then visit http://localhost:3000 in the browser.
-## Technologies used:
+## STACK:
 + Nodejs 
 + Expressjs 
 + MongoDB
++ Mongoose
++ EJS
