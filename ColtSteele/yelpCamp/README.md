@@ -4,9 +4,9 @@
 + Link: https://rocky-garden-50458.herokuapp.com/
 
 ## Overview:
-This is a small project of Colt Steele's Web Developer Bootcamp course in Udemy.
+This is a small project of [Colt Steele's Web Developer Bootcamp course](https://www.udemy.com/course/the-web-developer-bootcamp/) in Udemy.
 
-In this website, Users can create new campgrounds and comment and rate other's campgrounds.
+In this website, Users can __CREATE__ new campgrounds and __COMMENT__ and __RATE__ other's campgrounds.
 
 ## Usage:
 Prerequisites:
@@ -20,14 +20,14 @@ Prerequisites:
 
 + In another terminal window, run these commands:
 
-    git clone https://github.com/cuongpct109/WebDevelopemntBootcamp.git
-    cd WebDevelopemntBootcamp/ColtSteele/yelpCamp
-    npm install
-    node app.js
+      git clone https://github.com/cuongpct109/WebDevelopemntBootcamp.git
+      cd WebDevelopemntBootcamp/ColtSteele/yelpCamp
+      npm install
+      node app.js
 
 
 + Browse to the url given in the output.
-Example: if the output is : Server running at http://localhost:3000 then visit http://localhost:3000 in the browser.
+Example: if the console's output is : Serving on port 3000 then visit http://localhost:3000 in the browser.
 ## Technologies used:
 + Nodejs 
 + Expressjs 
