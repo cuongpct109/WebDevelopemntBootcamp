@@ -1,6 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <link rel="stylesheet" href="/stylesheets/stars.css" />
-<link rel="stylesheet" href="/stylesheets/popup.css">
+<link rel="stylesheet" href="/stylesheets/review.css"/>
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
 <link
   rel="stylesheet"
@@ -158,7 +158,7 @@
       <% } %>
     </form>
     <% for (let review of campground.reviews) { %>
-    <div class="card mb-3">
+    <div class="card mb-3 ">
       <div class="card-body">
         <h5 class="card-title"><%= review.author.username %></h5>
  
