@@ -1,4 +1,6 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark mb-3">
+<nav
+  class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark nav-bar-camp mb-3"
+>
   <div class="container-fluid">
     <a class="navbar-brand" href="/">YelpCamp</a>
     <button
@@ -13,39 +15,90 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
+      <div
+        class="d-flex flex-column flex-sm-row w-100 justify-content-between justify-content-lg-between"
+      >
+        <div class="navbar-nav text-center text-sm-start">
           <a class="nav-link" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/campgrounds">Campgrounds</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/campgrounds/new">New Campground</a>
-        </li>
-      </ul>
 
-      <ul class="navbar-nav ms-auto">
-        <% if (currentUser) { %>
-        <li class="nav-item">
-          <a class="nav-link" href="#"
-            >Signed in as <%= currentUser.username %>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
-        </li>
+          <a class="nav-link d-lg-none d-xl-block" href="/campgrounds"
+            >Campgrounds</a
+          >
 
-        <% } else { %>
+          <a class="nav-link d-lg-none d-xl-block" href="/campgrounds/new"
+            >New Campground</a
+          >
+          <% if (currentUser) { %>
+          <a class="nav-link d-lg-none d-xl-block" href="/campgrounds/mycampgrounds"
+            >My Campgrounds</a
+          >
+          <% } %> 
+          <li class="nav-item dropdown d-none d-lg-flex d-xl-none">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Campgrounds
+            </a>
+            <ul
+              class="dropdown-menu bg-dark text-dark"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li>
+                <a class="dropdown-item text-white-50" href="/campgrounds"
+                  >All Campgrounds</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item text-white-50" href="/campgrounds/new"
+                  >Add a New Campground</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item text-white-50" href="/mycampgrounds"
+                  >View My Campgrounds</a
+                >
+              </li>
+            </ul>
+          </li>
+        </div>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
-        </li>
-        <% } %>
-      </ul>
+        <hr class="d-md-none bg-white">
+
+        <div class="navbar-nav d-flex flex-column align-items-center align-items-sm-end flex-lg-row flex-lg-fill">
+          
+
+          <form action="/campgrounds/search" method="GET" class="d-flex my-3 my-lg-0 flex-grow-1 me-2">
+            <input name="q" id="search" type="search" placeholder="Search Campgrounds" aria-label="Search" 
+              class="form-control me-2   ms-auto bg-dark text-white btn-outline-secondary">
+            <button class="btn btn-outline-secondary" type="submit" aria-label="search"><i class="bi bi-search "></i></button>
+          </form>
+
+          <% if (currentUser) { %>
+          <li class="nav-item">
+            <a class="nav-link text" href="#"
+              >Welcome, <%= currentUser.username %>!
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+
+          <% } else { %>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+          </li>
+          <% } %>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

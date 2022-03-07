@@ -26,6 +26,7 @@ const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
 const User = require("./models/user");
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
+
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -44,8 +45,6 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
-const secure = dbUrl === "mongodb://localhost:27017/yelpcamp" ? false : true;
-
 app.use(
   session({
     store: MongoStore.create({
@@ -60,7 +59,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
-      secure: secure,
+      secure: true,
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
@@ -84,6 +83,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
+
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();

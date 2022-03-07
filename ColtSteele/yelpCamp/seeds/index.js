@@ -6,8 +6,10 @@ const Campground = require("../models/campground");
 const Review = require("../models/review");
 const User = require("../models/user");
 const cities = require("./cities");
-const { descriptors, places } = require("./seedHelpers");
+const { descriptors, places, imageUrls } = require("./seedHelpers");
 const dbUrl = process.env.DB_URL;
+// const dbUrl = "mongodb://localhost:27017/yelpcamp";
+const { v4: uuidv4 } = require("uuid");
 
 mongoose.connect(dbUrl);
 
@@ -22,52 +24,26 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 const seedDB = async () => {
   await Campground.deleteMany();
   await Review.deleteMany();
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 200; i++) {
     const city = sample(cities);
     const price = Math.floor(Math.random() * 20) + 10;
+    const randomImages = [];
+    for (let j = 0; j < 4; j++) {
+      randomImages.push({
+        url: sample(imageUrls),
+        filename: "Unsplash-" + uuidv4(),
+      });
+    }
     const campground = await new Campground({
       author: (await User.findOne({ name: "cuong" }))._id,
       location: `${city.city}, ${city.state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       description:
-        "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus ipsam alias, voluptate molestias adipisci minima, quae ea, delectus aspernatur harum unde molestiae tempora soluta et quod excepturi ut aperiam eum!",
+        "A great place to visit when traveling in the world. Located in Tho Quang ward, Son Tra district, the Son Tra peninsula is a primeval forest with beautiful landscapes having the greatest diversity of the ecosystem. There are many interesting places to visit during your stays in the Son Tra peninsula",
       price,
-      images: [
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297794/YelpCamp/g1n6u6cbsuhdpvmsjz6j.jpg",
-          filename: "YelpCamp/g1n6u6cbsuhdpvmsjz6j",
-        },
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297801/YelpCamp/xkdwu1eqnih516jkocst.jpg",
-          filename: "YelpCamp/xkdwu1eqnih516jkocst",
-        },
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646297790/YelpCamp/zqjjqvwkqxk4dwp4vy0u.jpg",
-          filename: "YelpCamp/zqjjqvwkqxk4dwp4vy0u",
-        },
-
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646296964/YelpCamp/v8lmfsoa8nsc4oqas4g6.jpg",
-          filename: "YelpCamp/v8lmfsoa8nsc4oqas4g6",
-        },
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646296959/YelpCamp/ozjnos2enzvnfay9q4m4.jpg",
-          filename: "YelpCamp/ozjnos2enzvnfay9q4m4",
-        },
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646296956/YelpCamp/gf3evjjinw0hayxhskk9.jpg",
-          filename: "YelpCamp/gf3evjjinw0hayxhskk9",
-        },
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646192636/YelpCamp/qj4zee6vzsq9ynrnt0km.png",
-          filename: "YelpCamp/qj4zee6vzsq9ynrnt0km",
-        },
-        {
-          url: "https://res.cloudinary.com/cuongpct109/image/upload/v1646192746/YelpCamp/ott6rlmcy0ghtcsm6ks2.png",
-          filename: "YelpCamp/ott6rlmcy0ghtcsm6ks2",
-        },
-      ],
+      images: [...randomImages],
       geometry: { type: "Point", coordinates: [city.longitude, city.latitude] },
+      lastUpdated: Date.now(),
     });
     await campground.save();
   }

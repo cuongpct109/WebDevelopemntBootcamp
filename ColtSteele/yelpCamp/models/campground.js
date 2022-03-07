@@ -46,6 +46,7 @@ const CampgroundSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    lastUpdated: Number,
   },
   opts
 );
@@ -54,6 +55,20 @@ CampgroundSchema.virtual("properties.popUpMarkup").get(function () {
   return `
   <h6><strong><a href="/campgrounds/${this._id}">${this.title}</a></strong></h6>
   <h6>${this.description.substring(0, 20)}...</h6>`;
+});
+
+// How many days ago the Camp was Updated
+CampgroundSchema.virtual("lastUpdatedString").get(function () {
+  const oneDay = 1000 * 60 * 60 * 24;
+  const oneHour = 1000 * 60 * 60;
+  const days = (Date.now() - this.lastUpdated) / oneDay;
+  const hours = Math.floor((Date.now() - this.lastUpdated) / oneHour);
+  if (days < 1) {
+    return `${hours}h ago`;
+  } else if (days < 2) {
+    return "1 day ago";
+  }
+  return Math.floor(days) + " days ago";
 });
 
 CampgroundSchema.post("findOneAndDelete", async function (doc) {

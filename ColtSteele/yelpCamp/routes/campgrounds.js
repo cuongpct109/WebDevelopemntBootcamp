@@ -9,6 +9,8 @@ const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, validateCampground, isAuthor } = require("../middleware");
 
 const {
+  showMyCamp,
+  search,
   index,
   renderNewForm,
   createCampground,
@@ -29,7 +31,8 @@ router
   );
 
 router.get("/new", isLoggedIn, catchAsync(renderNewForm));
-
+router.get("/search", catchAsync(search));
+router.get("/mycampgrounds", isLoggedIn, catchAsync(showMyCamp));
 router
   .route("/:id")
   .get(catchAsync(showCampground))

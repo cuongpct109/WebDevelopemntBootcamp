@@ -8,14 +8,6 @@ const map = new mapboxgl.Map({
 });
 
 map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }));
-map.addControl(
-  new MapboxDirections({
-    accessToken: mapboxgl.accessToken,
-    unit: "metric",
-    profile: "mapbox/driving",
-  }),
-  "top-left"
-);
 
 // Create a marker and add it to the map.
 new mapboxgl.Marker({

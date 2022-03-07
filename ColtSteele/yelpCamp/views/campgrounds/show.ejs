@@ -57,6 +57,7 @@
           Submitted by <%= campground.author.username %>
         </li>
         <li class="list-group-item">$<%= campground.price %>/night</li>
+        <li class="list-group-item">Created <%= campground.lastUpdatedString %></li>
       </ul>
       <% if (currentUser && campground.author.equals(currentUser._id)) { %>
       <div class="card-body">
@@ -74,9 +75,7 @@
         </form>
       </div>
       <% } %>
-      <div class="card-footer text-muted">
-        <a href="/campgrounds">All Campgrounds</a>
-      </div>
+      
     </div>
   </div>
   

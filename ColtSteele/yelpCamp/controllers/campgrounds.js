@@ -1,12 +1,107 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../cloudinary");
+
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const campground = require("../models/campground");
 const mapboxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapboxToken });
 
+module.exports.showMyCamp = async (req, res, next) => {
+  const id = req.user._id;
+  const campgrounds = await Campground.find({
+    author: id,
+  });
+
+  let currentPage = Number(req.query.page);
+  if (!currentPage || currentPage < 1) {
+    // if client req /index w/o ?page
+    currentPage = 1;
+    // get campgrounds from the database
+
+    // Initialize Pagination
+    let len = campgrounds.length;
+    req.session.pagination = {
+      totalItems: len, // total # of campgrounds
+      itemsPerPage: 20,
+      totalPages: Math.ceil(len / 20), // total # of pages
+    };
+  }
+
+  if (!req.session.pagination || !campgrounds) {
+    res.redirect("/campgrounds/mycampgrounds");
+  }
+  const { itemsPerPage, totalItems, totalPages } = req.session.pagination;
+
+  let start = (currentPage - 1) * itemsPerPage;
+  let end = currentPage * itemsPerPage;
+  if (end > totalItems) end = totalItems;
+
+  res.render("campgrounds/myCamp", {
+    campgrounds,
+    totalPages,
+    currentPage,
+    start,
+    end,
+  });
+};
+
 module.exports.index = async (req, res, next) => {
+  let currentPage = Number(req.query.page);
   const campgrounds = await Campground.find({});
-  res.render("campgrounds/index", {
+
+  if (!currentPage || currentPage < 1) {
+    // if client req /index w/o ?page
+    currentPage = 1;
+
+    // Initialize Pagination
+    let len = campgrounds.length;
+    req.session.pagination = {
+      totalItems: len, // total # of campgrounds
+      itemsPerPage: 20,
+      totalPages: Math.ceil(len / 20), // total # of pages
+    };
+  }
+
+  if (!req.session.pagination || !campgrounds) res.redirect("campgrounds/");
+
+  const { itemsPerPage, totalItems, totalPages } = req.session.pagination;
+
+  let start = (currentPage - 1) * itemsPerPage;
+  let end = currentPage * itemsPerPage;
+  if (end > totalItems) end = totalItems;
+
+  res.render("campgrounds/", {
+    campgrounds,
+    totalPages,
+    currentPage,
+    start,
+    end,
+  });
+};
+
+module.exports.search = async (req, res) => {
+  const searchTerm = req.query.q;
+
+  const campgrounds = await Campground.aggregate([
+    {
+      $search: {
+        index: "campgroundIndex",
+        text: {
+          query: searchTerm,
+          path: {
+            wildcard: "*",
+          },
+        },
+      },
+    },
+    {
+      $limit: 10,
+    },
+  ]);
+  console.log(campgrounds);
+
+  res.render("campgrounds/search", {
+    searchTerm,
     campgrounds,
   });
 };
@@ -43,6 +138,8 @@ module.exports.createCampground = async (req, res, next) => {
     url: f.path,
     filename: f.filename,
   }));
+
+  req.body.campground.lastUpdated = Date.now();
 
   const campground = new Campground(req.body.campground);
 

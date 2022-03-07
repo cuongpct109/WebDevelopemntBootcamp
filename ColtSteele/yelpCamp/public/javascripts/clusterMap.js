@@ -1,20 +1,23 @@
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
   container: "cluster-map",
-  style: "mapbox://styles/mapbox/light-v10",
-  center: [108.2031, 16.040565],
-  zoom: 8,
+  style: "mapbox://styles/mapbox/dark-v10",
+  center: [-99.51561, 39.55566],
+  zoom: 3,
 });
-map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }));
+
 map.addControl(
   new MapboxDirections({
     accessToken: mapboxgl.accessToken,
     unit: "metric",
     profile: "mapbox/driving",
   }),
-  "top-left"
+  "top-right"
 );
-
+map.addControl(
+  new mapboxgl.NavigationControl({ visualizePitch: true }),
+  "bottom-right"
+);
 map.on("load", () => {
   // Add a new source from our GeoJSON data and
   // set the 'cluster' option to true. GL-JS will
@@ -43,11 +46,11 @@ map.on("load", () => {
       "circle-color": [
         "step",
         ["get", "point_count"],
-        "#51bbd6",
+        "#ffaec0", // pink
+        20,
+        "#ffab73", // orange
         100,
-        "#f1f075",
-        750,
-        "#f28cb1",
+        "#cdc733", // yellow green
       ],
       "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
     },
